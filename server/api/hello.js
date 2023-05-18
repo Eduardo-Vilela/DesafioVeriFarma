@@ -5,6 +5,3 @@ export const Movies = type => {
     baseURL: `http://www.omdbapi.com/?apikey=c7485f5a&s&${type}`
   });
 };
-// export default defineEventHandler(() =>{
-//   return { message: 'hello world!'}
-// })

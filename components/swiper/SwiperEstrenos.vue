@@ -16,9 +16,10 @@
           :key="movie.imdbID + Math.random()"
           v-for="movie in movies"
           >
-          <div @click="showDetail(movie.imdbID)">
+          <div @click="showDetail(movie.imdbID)"  >
             <img :src="movie.Poster" id="imagemPosterSlide" loading="lazy"/>
           </div>
+          <p>{{movie.imdbID}}</p>
       </swiper-slide>
             
         </swiper>
@@ -29,11 +30,7 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/pagination";
-import { Movies } from "../../server/api/hello";
-
-
-// import required modules
-import { Navigation} from "swiper";
+import { Movies } from "../../server/api/hello";  
 
 export default {
     name: 'Movies',
@@ -55,18 +52,16 @@ export default {
   },
   methods: {
     async getMovieDetail(){
-      this.showLoading = true;
+     
       try {
         const { data: { Search } } = await Movies(this.type).get();
         this.movies = Search;
       } catch (error) {
         console.error(error);
-      } finally {
-        this.showLoading = false;
-      }
+      } 
     },
     showDetail(_id) {
-      this.$router.push({ name: "Detail", params: { id: _id } });
+      this.$router.push({ name: "detail", params: { id: _id } });
     },
   }
 };

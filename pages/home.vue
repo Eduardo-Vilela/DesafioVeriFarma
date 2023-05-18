@@ -3,6 +3,7 @@
       <Navbar/>
       <div class="boxSwiper">
       </div>
+      <router-view></router-view>
         <SwiperEstrenos :key="movie.id" :type="movie.type" v-for="movie in movies"/>
 </template>
 
