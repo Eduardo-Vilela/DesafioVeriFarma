@@ -2,68 +2,31 @@
 
       <Navbar/>
       <div class="boxSwiper">
-        <!-- <swiper
-        :loop="true"
-        :autoplay="{
-        delay: 2500,
-        disableOnInteraction: false,
-        }"
-        :navigation="true"
-        :modules="modules"
-        class="swiperPrincipal"
-      >
-      <swiper-slide class="swiper-slide-principal" v-for="slide in data" :key="slide.imdbID" :style="{ backgroundImage: `url(${slide.Poster})` }">
-        {{ slide.content }} 
-      </swiper-slide>
-      </swiper> -->
-      <SwiperTendencia/>
       </div>
-      <!-- <div v-if="error || !data">
-        <p>errorrrr</p>
-      </div>
-     <div v-else> -->
-      <SwiperEstrenos/>
-      <!-- <p>{{ data }}</p> -->
-     <!-- </div> -->
+        <SwiperEstrenos :key="movie.id" :type="movie.type" v-for="movie in movies"/>
 </template>
 
 <script >
-  import { Swiper, SwiperSlide } from 'swiper/vue';
-  import { Autoplay,Navigation} from 'swiper';
-  import axios from 'axios';
-  import 'swiper/css';
-
+ import SwiperEstrenos from '~/components/swiper/SwiperEstrenos.vue';
   export default {
-    components: {
-      Swiper,
-      SwiperSlide,
-    },
-    setup() {
-      const data = ref([]);
-  
-    axios.get('http://www.omdbapi.com/?i=tt3896198&apikey=c7485f5a&s=avengers')
-      .then(response => {
-        data.value = response.data.Search;
-      })
-      .catch(error => {
-        console.error(error);
-      });
-        const slides = [
-        { id: 1, content: 'Slide 1' },
-        { id: 2, content: 'Slide 2' },
-        { id: 3, content: 'Slide 3' },
-        { id: 4, content: 'Slide 4' },
-        { id: 5, content: 'Slide 5' },
-        // ...
-      ];
-
-      return {
-        modules: [Autoplay,Navigation],
-        data, 
-        slides, 
-      };
-    },
-  };
+  name: "App",
+  components: {
+    SwiperEstrenos,
+  },
+  computed: {
+    movies() {
+      return [
+      {id: 1, type: "s=avengers", description: "Populares na Vueflix"},
+        {id: 2, type: "s=harry", description: "Recomendados"},
+        {id: 3, type: "s=fast", description: "Em alta"},
+        {id: 4, type: "s=super", description: "Aventura"},
+        {id: 5, type: "s=game", description: "Ficção"},
+        {id: 6, type: "s=brain", description: "Para todas idades"},
+        {id: 7, type: "s=all", description: "Família"}
+      ]
+    }
+  }
+};
 </script>
 <style>
 /* .boxSwiper{

@@ -1,6 +1,6 @@
 <template>
     <div class="ContenedorSwiperLista">
-        <h3 class="subtituloSwiperLista">Estrenos</h3>
+        <h3 class="subtituloSwiperLista">{{ description }}</h3>
         <swiper
             :slidesPerView="4"
             :spaceBetween="30"
@@ -11,8 +11,14 @@
             :modules="modules"
             class="swiperLista"
             >
-            <swiper-slide class="slideSwiperLista" v-for="slide in data" :key="slide.imdbID" :style="{ backgroundImage: `url(${slide.Poster})` }">
-        {{ slide.content }} 
+            <swiper-slide class="slideSwiperLista" 
+            id="movieDiv"
+          :key="movie.imdbID + Math.random()"
+          v-for="movie in movies"
+          >
+          <div @click="showDetail(movie.imdbID)">
+            <img :src="movie.Poster" id="imagemPosterSlide" loading="lazy"/>
+          </div>
       </swiper-slide>
             
         </swiper>
@@ -21,45 +27,47 @@
 <script>
 
 import { Swiper, SwiperSlide } from "swiper/vue";
-import axios from 'axios';
 import "swiper/css";
 import "swiper/css/pagination";
-
+import { Movies } from "../../server/api/hello";
 
 
 // import required modules
 import { Navigation} from "swiper";
 
 export default {
-    name: 'SwiperLista',
+    name: 'Movies',
+    data() {
+    return {
+      movies: [],
+    };
+  },
+    props: {
+    type: String,
+    description: String,
+  },
   components: {
     Swiper,
     SwiperSlide,
   },
-  setup() {
-    const data = ref([]);
-  
-  axios.get('http://www.omdbapi.com/?i=tt3896198&apikey=c7485f5a&s=harry')
-    .then(response => {
-      data.value = response.data.Search;
-    })
-    .catch(error => {
-      console.error(error);
-    });
-      const slides = [
-      { id: 1, content: 'Slide 1' },
-      { id: 2, content: 'Slide 2' },
-      { id: 3, content: 'Slide 3' },
-      { id: 4, content: 'Slide 4' },
-      { id: 5, content: 'Slide 5' },
-      // ...
-    ];
-
-    return {
-      modules: [Navigation],
-      data, 
-        slides, 
-    };
+  mounted() {
+    this.getMovieDetail();
   },
+  methods: {
+    async getMovieDetail(){
+      this.showLoading = true;
+      try {
+        const { data: { Search } } = await Movies(this.type).get();
+        this.movies = Search;
+      } catch (error) {
+        console.error(error);
+      } finally {
+        this.showLoading = false;
+      }
+    },
+    showDetail(_id) {
+      this.$router.push({ name: "Detail", params: { id: _id } });
+    },
+  }
 };
 </script>
